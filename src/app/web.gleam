@@ -22,6 +22,6 @@ pub fn middleware(
 }
 
 fn log_referer(req: wisp.Request) {
-  let referer = request.referer(req) |> result.unwrap("unknown")
-  wisp.log_info("Referer: " <> referer)
+  let referer = request.referer_domain(req) |> result.unwrap("unknown")
+  wisp.log_info("Referer domain: " <> referer)
 }

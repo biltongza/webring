@@ -1,7 +1,7 @@
 import app/ring
 import gleam/dict
 
-pub fn ring_navigation_test() {
+pub fn ring_build_test() {
   let links = ["a", "b", "c", "d"]
   let expected =
     dict.from_list([

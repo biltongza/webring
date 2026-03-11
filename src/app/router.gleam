@@ -39,7 +39,7 @@ fn index(ctx: Context) {
 
 fn previous(req: Request, ctx: Context) {
   let ref =
-    request.referer(req)
+    request.referer_domain(req)
     |> result.try(ring.prev(ctx.ring, _))
 
   case ref {
@@ -50,7 +50,7 @@ fn previous(req: Request, ctx: Context) {
 
 fn next(req: Request, ctx: Context) {
   let ref =
-    request.referer(req)
+    request.referer_domain(req)
     |> result.try(ring.next(ctx.ring, _))
 
   case ref {
