@@ -1,31 +1,29 @@
+import app/request
 import app/ring
 import app/web.{type Context, middleware}
 import gleam/dict
 import gleam/list
 import gleam/result
-import gleam/uri
 import lustre/attribute
 import lustre/element
 import lustre/element/html
 import wisp.{type Request, type Response}
 
-fn link_item(str) {
-  let origin =
-    uri.parse(str)
-    |> result.map(uri.origin)
-    |> result.flatten
-    |> result.unwrap(or: str)
+fn to_href(domain) {
+  "https://" <> domain
+}
 
+fn link_item(str) {
   html.li([], [
-    html.a([attribute.href(str)], [
-      html.text(origin),
+    html.a([attribute.href(str |> to_href)], [
+      html.text(str),
     ]),
   ])
 }
 
 fn index(ctx: Context) {
   let links =
-    ctx.links
+    ctx.domains
     |> list.map(link_item)
     |> html.ul([], _)
 
@@ -40,23 +38,16 @@ fn index(ctx: Context) {
   |> wisp.html_response(200)
 }
 
-fn referer(req: Request) {
-  req.headers
-  |> dict.from_list
-  |> dict.get("referer")
-}
-
 fn previous(req: Request, ctx: Context) {
   let get_link = dict.get(ctx.ring, _)
 
   let ref =
-    referer(req)
-    |> result.map(get_link)
-    |> result.flatten
+    request.referer(req)
+    |> result.try(get_link)
     |> result.map(ring.prev)
 
   case ref {
-    Ok(from) -> wisp.redirect(from)
+    Ok(from) -> wisp.redirect(from |> to_href)
     _ -> random(ctx)
   }
 }
@@ -65,20 +56,19 @@ fn next(req: Request, ctx: Context) {
   let get = dict.get(ctx.ring, _)
 
   let ref =
-    referer(req)
-    |> result.map(get)
-    |> result.flatten
+    request.referer(req)
+    |> result.try(get)
     |> result.map(ring.next)
 
   case ref {
-    Ok(from) -> wisp.redirect(from)
+    Ok(from) -> wisp.redirect(from |> to_href)
     _ -> random(ctx)
   }
 }
 
 fn random(ctx: Context) {
-  let assert Ok(random) = ctx.links |> list.shuffle |> list.first
-  wisp.redirect(random)
+  let assert Ok(random) = ctx.domains |> list.shuffle |> list.first
+  wisp.redirect(random |> to_href)
 }
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {

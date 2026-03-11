@@ -1,0 +1,14 @@
+services:
+  website:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    ulimits: # needed to get around some weird docker issues
+      nofile:
+        soft: 1024
+        hard: 1024
+    restart: unless-stopped
+    environment:
+      WISP_SECRET_KEY: ${WISP_SECRET_KEY?ERROR}

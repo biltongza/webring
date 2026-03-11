@@ -1,8 +1,10 @@
+import app/request
 import app/ring
+import gleam/result
 import wisp
 
 pub type Context {
-  Context(links: List(String), ring: ring.Ring)
+  Context(domains: List(String), ring: ring.Ring)
 }
 
 pub fn middleware(
@@ -10,9 +12,16 @@ pub fn middleware(
   handle_request: fn(wisp.Request) -> wisp.Response,
 ) {
   let req = wisp.method_override(req)
+
+  log_referer(req)
   use <- wisp.log_request(req)
   use <- wisp.rescue_crashes
   use req <- wisp.handle_head(req)
 
   handle_request(req)
+}
+
+fn log_referer(req: wisp.Request) {
+  let referer = request.referer(req) |> result.unwrap("unknown")
+  wisp.log_info("Referer: " <> referer)
 }

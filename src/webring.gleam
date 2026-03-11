@@ -10,10 +10,10 @@ import wisp/wisp_mist
 
 pub fn sites() {
   [
-    "https://nabeelvalley.co.za",
-    "https://zahrahmohamed.co.za",
-    "https://link-book.nabeelvalley.co.za",
-    "https://all-the-greens.netlify.app",
+    "nabeelvalley.co.za",
+    "zahrahmohamed.co.za",
+    "link-book.nabeelvalley.co.za",
+    "all-the-greens.nabeelvalley.co.za",
   ]
 }
 
@@ -30,8 +30,6 @@ pub fn main() {
   let links = sites()
   let ring = ring.build_ring(links)
   let ctx = Context(links, ring)
-
-  echo ctx
 
   let handler = router.handle_request(_, ctx)
 
