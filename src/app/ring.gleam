@@ -1,4 +1,6 @@
 import gleam/dict.{type Dict}
+import gleam/list
+import gleam/result
 
 pub type Link {
   Link(prev: String, next: String)
@@ -7,36 +9,29 @@ pub type Link {
 pub type Ring =
   Dict(String, Link)
 
-pub fn build_ring_rec(first, prev, links) {
-  let link = Link(prev, first)
-  case links {
-    [current] -> dict.from_list([#(current, link)])
-    [current, ..rest] ->
-      build_ring_rec(first, current, rest)
-      |> dict.insert(current, link)
-    _ ->
-      dict.from_list([
-        #(first, Link(prev, prev)),
-        #(prev, Link(first, first)),
-      ])
+pub fn build_ring(links: List(String)) {
+  let padded = case links {
+    [first] -> {
+      [first, first, first]
+    }
+    [first, second, ..] -> list.append(links, [first, second])
+    [] -> []
   }
+
+  padded
+  |> list.window(3)
+  |> list.fold(from: dict.new(), with: fn(acc, win) {
+    case win {
+      [prev, curr, next] -> acc |> dict.insert(curr, Link(prev, next))
+      _ -> acc
+    }
+  })
 }
 
-pub fn build_ring(links) {
-  case links {
-    [first, second, ..rest] -> build_ring_rec(first, second, rest)
-    _ -> dict.new()
-  }
+pub fn next(ring: Ring, key: String) {
+  dict.get(ring, key) |> result.map(fn(v: Link) { v.next })
 }
 
-// pub fn random_link(ring: Ring) {
-//   todo
-// }
-
-pub fn next(link: Link) {
-  link.next
-}
-
-pub fn prev(link: Link) {
-  link.prev
+pub fn prev(ring: Ring, key: String) {
+  dict.get(ring, key) |> result.map(fn(v: Link) { v.prev })
 }

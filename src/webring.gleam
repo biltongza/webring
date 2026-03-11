@@ -12,8 +12,6 @@ pub fn sites() {
   [
     "nabeelvalley.co.za",
     "zahrahmohamed.co.za",
-    "link-book.nabeelvalley.co.za",
-    "all-the-greens.nabeelvalley.co.za",
   ]
 }
 

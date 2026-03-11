@@ -1,7 +1,6 @@
 import app/request
 import app/ring
 import app/web.{type Context, middleware}
-import gleam/dict
 import gleam/list
 import gleam/result
 import lustre/attribute
@@ -39,12 +38,9 @@ fn index(ctx: Context) {
 }
 
 fn previous(req: Request, ctx: Context) {
-  let get_link = dict.get(ctx.ring, _)
-
   let ref =
     request.referer(req)
-    |> result.try(get_link)
-    |> result.map(ring.prev)
+    |> result.try(ring.prev(ctx.ring, _))
 
   case ref {
     Ok(from) -> wisp.redirect(from |> to_href)
@@ -53,12 +49,9 @@ fn previous(req: Request, ctx: Context) {
 }
 
 fn next(req: Request, ctx: Context) {
-  let get = dict.get(ctx.ring, _)
-
   let ref =
     request.referer(req)
-    |> result.try(get)
-    |> result.map(ring.next)
+    |> result.try(ring.next(ctx.ring, _))
 
   case ref {
     Ok(from) -> wisp.redirect(from |> to_href)
