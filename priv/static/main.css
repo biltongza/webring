@@ -1,0 +1,58 @@
+:root {
+  color-scheme: light dark;
+
+  --accent-color: light-dark(#10665c, #43e6d2);
+  --color: light-dark(#111111, #EEEEEE);
+  --background-color: light-dark(#EEEEEE, #111111);
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Comic Sans MS";
+}
+
+main {
+  box-sizing: border-box;
+  padding: 1rem;
+  min-height: 100dvh;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    margin: 0;
+    font-size: 3rem;
+  }
+
+  a {
+    color: var(--accent-color);
+    text-decoration: none;
+    text-decoration: line-through wavy transparent;
+
+    transition: text-decoration-color 100ms;
+
+    &:hover {
+      text-decoration-color: var(--color);
+    }
+
+    &:focus {
+      outline: 3px solid var(--accent-color);
+      outline-offset: 3px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

@@ -17,18 +17,43 @@ fn link_item(s) {
   ])
 }
 
+fn main(el) {
+  html.html(
+    [
+      attribute.lang("en"),
+    ],
+    [
+      html.head([], [
+        html.title([], "Nabeel's Webring"),
+        html.meta([attribute.charset("UTF-8")]),
+        html.meta([
+          attribute.name("viewport"),
+          attribute.content("width=device-width, initial-scale=1.0"),
+        ]),
+        html.link([
+          attribute.rel("stylesheet"),
+          attribute.href("/static/main.css"),
+        ]),
+      ]),
+      html.body([], [html.main([], el)]),
+    ],
+  )
+}
+
 fn index(ctx: Context) {
   let links =
     ctx.sites
     |> list.map(link_item)
     |> html.ul([], _)
 
-  html.main([], [
+  let nav = html.nav([], [links])
+
+  main([
     html.h1([], [html.text("Welcome to Nabeel's Webring")]),
     html.p([], [
       html.a([attribute.href("/random")], [html.text("Random Link")]),
     ]),
-    links,
+    nav,
   ])
   |> element.to_document_string
   |> wisp.html_response(200)
@@ -63,7 +88,7 @@ fn random(ctx: Context) {
 }
 
 pub fn handle_request(req: Request, ctx: Context) -> Response {
-  use _ <- middleware(req)
+  use _ <- middleware(req, ctx)
 
   case wisp.path_segments(req) {
     [] -> index(ctx)

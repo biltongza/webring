@@ -20,7 +20,7 @@ pub fn main() {
   let assert Ok(wisp_secret_key) = env.get_string("WISP_SECRET_KEY")
 
   let ring = ring.build_ring(config.sites)
-  let ctx = Context(config.sites, ring)
+  let ctx = Context(config.sites, ring, static_dir() |> echo)
 
   let handler = router.handle_request(_, ctx)
 
@@ -32,4 +32,9 @@ pub fn main() {
     |> mist.start
 
   process.sleep_forever()
+}
+
+fn static_dir() {
+  let assert Ok(priv_directory) = wisp.priv_directory("webring")
+  priv_directory <> "/static"
 }
