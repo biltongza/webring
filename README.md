@@ -1,20 +1,26 @@
-# webring
+# Nabeel's Webring
 
-[![Package Version](https://img.shields.io/hexpm/v/webring)](https://hex.pm/packages/webring)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/webring/)
+> Don't know what Webrings are? [Wikipedia's got you covered](https://en.wikipedia.org/wiki/Webring)
 
-```sh
-gleam add webring@1
+## Would You like to Join?
+
+That's great! You need to do two things:
+
+1. Add the following HTML to your site's footer (or some variation of it - style it however you like!)
+
+```html
+<section>
+  <a href="https://webring.nabeelvalley.co.za"><em>Webring</em></a>
+
+  <ul class="links">
+    <a href="https://webring.nabeelvalley.co.za/previous">Previous</a>
+    <a href="https://webring.nabeelvalley.co.za/random">Random</a>
+    <a href="https://webring.nabeelvalley.co.za/next">Next</a>
+  </ul>
+</section>
 ```
-```gleam
-import webring
 
-pub fn main() -> Nil {
-  // TODO: An example of the project in use
-}
-```
-
-Further documentation can be found at <https://hexdocs.pm/webring>.
+2. Add your site to the list at `src/config.gleam` and you'll automatically be a part of the ring
 
 ## Development
 
